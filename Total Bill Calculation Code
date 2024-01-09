@@ -1,0 +1,59 @@
+import locale
+locale.setlocale(locale.LC_ALL,'')
+
+sandwiches = ['BLT', 'French Dip', 'Chicken Club', 'Turkey Club', 'Meatball', "Shrimp Po'boy"] #list of sandwiches
+price = [5.50, 7.25, 6.00, 6.00, 6.50, 7.75] #list of prices
+TAX_RATE = 0.0835 #tax rate=8.35%
+
+# function to display the menu
+def DisPlayMenu():
+    for index in range(len(sandwiches)): #index runs from 0 to 5
+        print(index+1, ".", sandwiches[index]) #print sandwich number and name with index + 1
+    #end for
+    print(index+2, ". Exit") #print exit option with index + 2 after end for
+
+# function to get user's sandwich selection
+def GetMenuSelection():
+    while True:
+        try:
+            choice = int(input("Enter the number of the sandwich you want: ")) #ask user for sandwich number
+            if choice == len(sandwiches) + 1: #if user selects exit option
+                return choice
+            if choice <= 0 or choice > len(sandwiches) + 1: #if user inputs invalid sandwich number
+                raise Exception
+            else: #if user inputs other values
+                return choice
+        except:
+            print('Please enter a number between 1 and', len(sandwiches) + 1)
+    #end while
+
+# function to get the price of each sandwich
+def CurrentPrice(choice):
+    curPrice = price[choice-1]
+    return curPrice
+
+
+# function to calculate the subtotal for user's order
+def GetPriceForOrder():
+    subtotal = 0 #initialize subtotal as 0
+    choice = GetMenuSelection() #initialize choice by using GetMenuSelection function
+    while choice > 0 and choice <= len(sandwiches): #loop if user's input is larger than 0 and less than or equal the length of sanwiches's list
+        curPrice = CurrentPrice(choice) #get current sandwich price
+        subtotal = subtotal + curPrice #add current sandwich price to subtotal
+        choice = GetMenuSelection() #get user's next sandwich order
+    return subtotal #return the subtotal
+    #end while
+
+# function to calculate and display the output
+def CalcandDisplayOutput():
+    subtotal = GetPriceForOrder() #get subtotal of user's order
+    taxOwed = subtotal * TAX_RATE #calculate tax owed
+    total = subtotal + taxOwed #calculate total price
+    #print tax owed and total cost
+    print('{:<20} {:>10}'.format('Your subtotal is ',locale.currency(subtotal,grouping=True)))
+    print('{:<20} {:>10}'.format('Your tax is ', locale.currency(taxOwed, grouping=True)))
+    print('{:<20} {:>10}'.format('Your total is ', locale.currency(total, grouping=True)))
+
+# display the menu and calculate the subtotal, tax, and total
+DisPlayMenu()
+CalcandDisplayOutput()
